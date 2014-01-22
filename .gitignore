@@ -1,3 +1,6 @@
+lib/
+obj/
+
 # Compiled Object files
 *.slo
 *.lo
