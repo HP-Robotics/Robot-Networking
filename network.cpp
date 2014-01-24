@@ -70,14 +70,17 @@ void networkrobot::int_send(const unsigned char* message, int len)
 
 void networkrobot::sendmessage(networkmessage const* msg)
 {
-	vector<unsigned char> messagedata = msg->serialize();
-	if(messagedata.size() > MSGLEN-2)
+	networkbuffer_in messagedata(MSGLEN-2);
+	msg->serialize(messagedata);
+	if(messagedata.getSize() > MSGLEN-2)
 		throw messagelengthexceededexception();
 	GUID netid = ENCODEGUID(msg->getGuid());
 	vector<unsigned char> data;
+	//write the guid
 	data.push_back((netid >> 8) & 0xff);
 	data.push_back(netid & 0xff);
-	copy(messagedata.begin(), messagedata.end(), back_inserter(data));
+	//write the data from the buffer
+	data.insert(data.end(), &messagedata.getBuffer()[0], &messagedata.getBuffer()[messagedata.getDataLength()]);
 	
 	int_send(&data[0], data.size());
 }

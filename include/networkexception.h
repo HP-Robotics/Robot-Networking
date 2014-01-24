@@ -23,7 +23,7 @@ public:
 	virtual const char* what() const throw()
 	{
 		std::ostringstream s;
-		s << "Buffer size exceeded, max size: " << maxsize << ", actual size: " + actualsize;
+		s << "Buffer size exceeded, max size: " << maxsize << ", actual size: " << actualsize << "\n";
 		return s.str().c_str();
 	}
 };

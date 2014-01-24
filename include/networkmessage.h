@@ -5,6 +5,7 @@
 #include <map>
 #include <stdio.h>
 #include "networkexception.h"
+#include "networkbuffer_in.h"
 #include "guid.h"
 
 
@@ -67,7 +68,7 @@ public:
 
 	virtual GUID getGuid() const = 0;
 	
-	virtual std::vector<unsigned char> serialize() const = 0;
+	virtual void serialize(networkbuffer_in&) const = 0;
 	
 	virtual void deserialize(const unsigned char* data, int len) = 0;
 	

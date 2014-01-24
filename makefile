@@ -1,5 +1,5 @@
 # source files.
-SRC = networkmessage.cpp network.cpp
+SRC = networkmessage.cpp network.cpp networkbuffer_in.cpp
 
 OBJDIR = obj
 
@@ -36,7 +36,7 @@ $(OUT): $(OBJ)
 	
 depend: .depend
 
-.depend: $(SRC)
+.depend: $(SRC) 
 	rm -f ./.depend
 	$(CCC) $(INCLUDES) $(CCFLAGS) -MM $^>>./.depend;
 
