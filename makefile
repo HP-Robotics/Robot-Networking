@@ -1,5 +1,5 @@
 # source files.
-SRC = networkmessage.cpp network.cpp networkbuffer_in.cpp
+SRC = networkmessage.cpp network.cpp networkbuffer_in.cpp networkbuffer_out.cpp
 
 OBJDIR = obj
 
