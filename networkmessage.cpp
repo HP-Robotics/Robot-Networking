@@ -20,7 +20,7 @@ std::map<GUID, messagecreator>& networkmessage::getFactoryTable()
 networkmessage* networkmessage::createmessage(GUID guid, unsigned char* data, int datalen)
 {
 	try {
-		return getFactoryTable().at(guid)(data, datalen);
+		return getFactoryTable().at(guid)(networkbuffer_out(data, datalen));
 	}
 	catch(std::out_of_range ex){
 		throw guidunregisteredexception(guid);

@@ -5,7 +5,7 @@
 #include <map>
 #include <stdio.h>
 #include "networkexception.h"
-#include "networkbuffer_in.h"
+#include "networkbuffer.h"
 #include "guid.h"
 
 
@@ -19,10 +19,10 @@
 #endif
 
 #define REGISTER_MESSAGE_DEFAULT(id, classname) namespace{\
-	networkmessage* _classname__defaultfactory(unsigned char* d, int l) \
+	networkmessage* _classname__defaultfactory(networkbuffer_out d) \
 	{ \
 		classname* ret = new classname();\
-		ret->deserialize(d, l);\
+		ret->deserialize(d);\
 		return ret;\
 	}\
     networkmessage::Registrar _registrar__id(id, &_classname__defaultfactory);\
@@ -36,7 +36,7 @@
 
 class networkmessage;
 
-typedef networkmessage* (*messagecreator)(unsigned char*, int);
+typedef networkmessage* (*messagecreator)(networkbuffer_out);
 
 
 class networkmessage
@@ -70,7 +70,7 @@ public:
 	
 	virtual void serialize(networkbuffer_in&) const = 0;
 	
-	virtual void deserialize(const unsigned char* data, int len) = 0;
+	virtual void deserialize(networkbuffer_out) = 0;
 	
 	virtual ~networkmessage();
 };
