@@ -8,8 +8,9 @@
 networkbuffer_out::networkbuffer_out(const unsigned char* raw, int length)
 	:_buffer(0), _size(length), _offset(0)
 {
-	_buffer = (unsigned char*)malloc(length * sizeof(char));
+	_buffer = (unsigned char*)malloc((length+1) * sizeof(char));
 	memcpy(_buffer, raw, length);
+	_buffer[length] = 0;
 }
 
 
