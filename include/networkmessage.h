@@ -78,8 +78,11 @@ public:
 
 inline void deletemessage(networkmessage** messageptr)
 {
-	delete *messageptr;
-	*messageptr = 0;
+	if(*messageptr)
+	{
+		delete *messageptr;
+		*messageptr = 0;
+	}
 };
 
 
