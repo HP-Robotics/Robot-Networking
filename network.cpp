@@ -69,12 +69,9 @@ void networkrobot::int_send(const unsigned char* message, int len)
 	if(len > MSGLEN)
 		throw bufferexception(MSGLEN, len);
 	unsigned short messagelength = (unsigned short)len;
-	printf("msglen: %i\n", messagelength);
 	//load the messagelength then the data to the buffer
 	unsigned short netmessagelen = messagelength;
-	printf("netmsglen: %i\n", netmessagelen);
 	_buf[0] = (netmessagelen >> 8) & 0xff;
-	printf("bytes: %i %i\n", (netmessagelen >> 8) & 0xff, netmessagelen & 0xff);
 	_buf[1] = netmessagelen & 0xff;
 	for(int i = 0; i < messagelength; i++)
 		_buf[i+2] = message[i];
