@@ -1,13 +1,25 @@
 #include "network.h"
 #include "networkexception.h"
 
-#include <stdio.h>
-#include <string.h>
+
+#ifdef _WRS_KERNEL
+#include <inetLib.h>
+#include <selectLib.h>
+#include <sockLib.h>
+#include <taskLib.h>
+#include <usrLib.h>
+#include <ioLib.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#else
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#endif
+#include <stdio.h>
+#include <string.h>
 #include <algorithm>
 #include <errno.h>
 
@@ -28,7 +40,7 @@ void networkrobot::connect()
 		throw socketexception();
 	
 	_outaddr.sin_family = AF_INET;
-    _outaddr.sin_addr.s_addr = inet_addr(_robotaddr);
+    _outaddr.sin_addr.s_addr = inet_addr(const_cast<char*>(_robotaddr));
     _outaddr.sin_port  = htons(_robotport);
     
     
@@ -66,7 +78,11 @@ void networkrobot::int_send(const unsigned char* message, int len)
 	_buf[1] = netmessagelen & 0xff;
 	for(int i = 0; i < messagelength; i++)
 		_buf[i+2] = message[i];
+#ifdef _WRS_KERNEL
+	int rc = sendto(_outsocket, (char*)_buf, messagelength+2, 0, (struct sockaddr *) &_outaddr, sizeof(_outaddr));
+#else
 	int rc = sendto(_outsocket, (const void*)_buf, messagelength+2, 0, (struct sockaddr *) &_outaddr, sizeof(_outaddr));
+#endif
 	if(rc == -1)
 		throw sendexception();
 }
@@ -93,8 +109,11 @@ networkmessage* networkrobot::receivemessage(bool block)
 {
 	if(!_connected)
 		throw notconnectedexception();
-
+#ifdef _WRS_KERNEL
+	int bytes = recv(_insocket, (char*)_buf, BUFLEN, block ? 0 : MSG_DONTWAIT);
+#else
 	int bytes = recv(_insocket, _buf, BUFLEN, block ? 0 : MSG_DONTWAIT);
+#endif
 	
 
 	if(bytes == -1)
